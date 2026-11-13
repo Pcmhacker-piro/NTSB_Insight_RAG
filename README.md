@@ -314,6 +314,35 @@ Low similarity scores (< 0.5) and a mismatch between the filter and the retrieve
 
 Unlike basic vector search tutorials, this system implements an end-to-end production-grade retrieval pipeline:
 
+```mermaid
+flowchart TD
+    UserQuery["User Natural Language Query"] --> QueryExpansion["Query Expansion (Gemini Flash)\nAviation Domain Terminology"]
+    
+    subgraph HybridRetrieval ["Stage 1: Hybrid Candidate Retrieval (Candidate Pool = 50)"]
+        QueryExpansion --> DenseEmbed["Dense Embeddings\n(gemini-embedding-001, 3072-dim)"]
+        QueryExpansion --> SparseBM25["Sparse BM25 Index\n(rank-bm25 lexical match)"]
+        DenseEmbed --> ChromaDB[("Local ChromaDB\nCosine Distance")]
+        SparseBM25 --> BM25Scores["BM25 Lexical Ranking"]
+        ChromaDB --> RRF["Reciprocal Rank Fusion (RRF, k=60)\nFuses Dense + Sparse Rankings"]
+        BM25Scores --> RRF
+    end
+
+    RRF --> TopCandidates["Top 20 Fused Candidates"]
+
+    subgraph RerankingStage ["Stage 2: Cross-Encoder Re-Ranking"]
+        TopCandidates --> CohereRerank["Cohere rerank-v3.5\nDeep Relevance Scoring"]
+        CohereRerank --> ScoreFilter{"Top Score >= 0.10?"}
+    end
+
+    ScoreFilter -- Yes --> Top5Chunks["Top 5 High-Precision Chunks"]
+    ScoreFilter -- No --> FallbackNotice["Grounded Fallback Notice\n(Prevents Hallucination)"]
+
+    subgraph Generation ["Stage 3: Grounded Answer Synthesis"]
+        Top5Chunks --> Synthesis["Gemini 2.5 Flash\nGrounded QA with Section Citations"]
+        Synthesis --> FinalAnswer["Final Verified Answer"]
+    end
+```
+
 1. **Aviation Domain Query Expansion:** Automatically rewrites colloquial user queries into standardized NTSB terminology using Gemini Flash (`expand_query`).
 2. **Hybrid Retrieval (Dense + Sparse):**
    - **Dense vector search:** Embeddings via `gemini-embedding-001` (3072 dimensions) indexed in local ChromaDB.
