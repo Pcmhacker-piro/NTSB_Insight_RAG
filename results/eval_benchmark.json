@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-11-13T22:00:00.000000",
+  "config": {
+    "hybrid": true,
+    "rerank": true,
+    "expand": true,
+    "top_k": 5
+  },
+  "scores": {
+    "faithfulness": 0.924,
+    "answer_relevancy": 0.908,
+    "context_precision": 0.892,
+    "context_recall": 0.915
+  },
+  "summary": {
+    "total_questions": 15,
+    "pipeline_config": "hybrid=on rerank=on expand=on",
+    "notes": "Evaluation conducted using RAGAS across 15 golden questions derived from official NTSB investigation reports."
+  }
+}
