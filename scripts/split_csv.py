@@ -1,8 +1,19 @@
 import pandas as pd
 import os
 
-src = '/Users/mjshetty/Downloads/NTSB-AviationData.csv'
-out_dir = '/Users/mjshetty/devops-workspace/aws/AI/RAG/data'
+import argparse
+
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+default_src = os.path.expanduser('~/Downloads/NTSB-AviationData.csv')
+default_out_dir = os.path.join(base_dir, 'data')
+
+parser = argparse.ArgumentParser(description="Split full NTSB CSV into year bands")
+parser.add_argument('--src', default=default_src, help="Path to source CSV")
+parser.add_argument('--out-dir', default=default_out_dir, help="Output directory")
+args = parser.parse_args()
+
+src = args.src
+out_dir = args.out_dir
 os.makedirs(out_dir, exist_ok=True)
 
 df = pd.read_csv(src)

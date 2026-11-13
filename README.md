@@ -3,8 +3,6 @@
 A local Retrieval-Augmented Generation (RAG) system built on real NTSB aviation accident data.
 Ask plain-English questions across thousands of official investigation reports and get answers grounded in actual findings.
 
-> New to RAG? Read [RAG: Give Your AI a Better Memory](https://nanotechbytes.com/post/rag-give-your-ai-a-better-memory?type=tech-byte) first — this project is the hands-on implementation.
-
 ---
 
 ## What Is NTSB?
@@ -126,8 +124,8 @@ ntsb-insight/
 > **Important:** All commands below must be run from the repo root (`ntsb-insight/`), not from inside `pipeline/` or `scripts/`.
 
 ```bash
-git clone https://github.com/mjgit007/NTSB-Insight-RAG.git
-cd NTSB-Insight-RAG
+git clone https://github.com/Pcmhacker-piro/NTSB_Insight_RAG.git
+cd NTSB_Insight_RAG
 
 # Create virtual environment
 python3 -m venv .venv
@@ -321,4 +319,9 @@ Low similarity scores (< 0.5) and a mismatch between the filter and the retrieve
 | Embed model | `gemini-embedding-001` (3072 dims) | Free tier, high-dimensional |
 | Retrieval | Metadata pre-filter + vector similarity | Precision without noise |
 | Answer model | Gemini Flash | Free tier; swap for Claude via `ANTHROPIC_API_KEY` |
-# NTSB_Insight_RAG
+
+---
+
+## Author & Maintainer
+
+Maintained by [@Pcmhacker-piro](https://github.com/Pcmhacker-piro).
